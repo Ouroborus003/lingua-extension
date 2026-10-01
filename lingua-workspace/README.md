@@ -1,85 +1,124 @@
 # Lingua Workspace
 
-LinguaStudio, ported into the vault — in LinguaStudio's own look. One
-native **Lingua** workspace (ribbon 🌐 / command palette, healed if
-deleted) carries the complete card-creation suite, styled with the
-app's design tokens (**sumi** by default; washi, konstrukt, soviet, and
-terminal selectable in settings). You never open the LinguaStudio app:
+LinguaStudio, ported into the vault — laid out as the v4 design
+(`Lingua Workspace v4.dc.html`): a sidebar of **batches** and one main
+pane, in your vault's own theme. The workspace sets no colours of its own;
+every surface is an Obsidian CSS variable, so a translucent theme over a
+wallpaper stays translucent and a light theme stays light. Open it from the
+ribbon 🌐 or the command palette (the "Lingua" workspace layout is healed
+if deleted).
 
-- **Capture** — term → lookup → pending list → save to the append-only
-  `Vocabulary — <lang>` documents, with rhythm units and per-term vocab
-  notes (they carry the exported-to-Anki flag behind the inventory's ✓).
-- **Vocab** — the flagship builder: one word list, several Anki card
-  templates at once (Meaning / Reading / Listening / Writing / Cloze Fill,
-  plus opt-in Visual). Dictionary-enriched, audio auto-resolved; export or
-  push builds every selected template per word.
-- **Dictionary** — full dictionary search; HSK sort/filter for Mandarin.
-- **Cloze** — one AI cloze via the local model; batches in the Custom
-  Cloze builder.
-- **Builders** — every builder the current app surfaces (37), in the
-  app's own nav groups: Core, Cloze, Skill, Composite, Output, Visual,
-  Depth, Tools, Source — with the app's per-language gating (Rhythm and
-  Tone Drill for Mandarin, Hanzi Writer for CJK, and so on). Each form
-  is generated from the app's own composite definitions,
-  field-for-field; retired card types don't appear. Batches persist per
-  card type and survive restarts. Preview in Anki, push, or export
-  `.apkg`. **Cascade** is the app's full two-mode builder — metronome
-  word-flash (pattern · meter · speak-on-beats · writing) and timed
-  reading — serializing the same BeatConfig the card template consumes.
-- **Card Studio** — the real Anki templates behind every model: fields,
-  front/back HTML, styling; compose a one-off card and push or export it.
-- **Sentences** — example-sentence lookup from the installed corpus; send
-  a sentence into a builder, the Capture list, or a cloze in one click.
-- **TTS** — LinguaStudio's text-to-speech: pick a voice, preview it, and
-  manage the audio cache the builders draw from.
-- **Manage** — install more languages: download or import dictionaries and
-  example-sentence packs, with live progress, or remove them.
-- **Tools** — Import (paste a list → any builder), OCR (image → text →
-  lines into any builder), image search, and stack export (several
-  batches → one `.apkg` with ordered subdecks).
-- **Settings** — theme + density, backend URLs and auto-start, Local AI
-  (URL/model + connection check), Anki deck prefix and `.apkg` folder,
-  paths, and the doctor — all in the workspace.
-- **Anki** — the vocabulary round-trip: push or export, then terms are
-  marked exported and the inventory shows ✓.
+## The sidebar
 
-## Two backends, both hands-off
+- **LINGUA · + · ↻** — new batch; sync Anki (AnkiConnect → AnkiWeb).
+- **Language menu** — search, grouped by script, with each language's
+  batch count. Everything below follows the chosen language.
+- **Inbox · Review · Card Studio · New batch · Stats · Manage**
+- **Batches** — this language's batches; *N to check* until every word is
+  complete. Right-click: open, skim, duplicate, delete.
+- **Stacks** — batches in study order, one deck with numbered subdecks.
+- **Tools** — Dictionary, Sentences, Builders, Import & OCR.
+- Backend dots (vault sidecar, engine) and the Lingua doctor.
+
+## A batch: one word list → many card types
+
+Header: the name (edit in place), where the words came from, **Export
+.apkg** and **Push N cards**, then tiles for words, card types, cards and
+words to check.
+
+1. **Words** — a sheet: word, pinyin/reading, meaning, example, audio,
+   status. Type words and press Enter: each is looked up (reading, meaning —
+   a sense picker when the dictionary gives several — example sentence,
+   audio). **Fill column** fills examples, meanings, audio, or Traditional +
+   Zhuyin for the whole batch or the selected rows. **Find & replace**,
+   **Rules** (if the word has more than N characters / comes from a source /
+   has several senses / has no audio / has a third tone → skip a template,
+   use a theme, add a tag, keep the first sense), flag filters (missing
+   field, several senses, no audio, check capture), and a selection bar
+   (set a field, look up again, remove). Right-click a word: play, look up
+   again, find an image, relate it to another saved term.
+2. **Card types** — batch defaults (the card themes learners may pick with a
+   ★ default, the deck, accessibility defaults; copy all of it from another
+   batch), then each card type made from these words: its templates, the
+   field mapping, what's missing, its own themes, its subdeck. Card types
+   are offered by language (Vocab for Mandarin, Word for every other
+   language, tones for Mandarin/Cantonese, stroke order for Han scripts).
+3. **Skim** — every card as a small preview in its theme. Click or Space
+   flips, ← → move, X skips. *This card only*: include it or not, its theme,
+   and per-card field edits that leave the word and its other cards alone.
+
+### Getting words in — New batch
+
+Paste or type · a frequency list (HSK levels for Mandarin) · from vault
+notes (the Inbox, plus the inventory's words not yet in Anki) · Boox /
+photo highlights (OCR; every word is flagged *Check capture* until
+confirmed) · an existing Anki deck (AnkiConnect). Words added to a batch
+are also recorded in the shared vocabulary CSV (an upsert — merge, never a
+duplicate).
+
+## The other screens
+
+- **Inbox** — words captured from notes, the dictionary or sentences. Move
+  the selected ones into a batch (looked up on the way) or save them to the
+  `Vocabulary — <lang>` document and their vocab notes without making cards.
+- **Card Studio** — the card families (Words, Sets, Sentences, Planned):
+  templates, fields, grading; add one to the open batch, or open its
+  classic builder. *Template library* shows the engine's raw templates and
+  composes one-off cards.
+- **Review** — opens Reading Companion's Study view (one scheduler).
+- **Stats** — your batches, and the vocabulary record's counts.
+- **Manage** — Languages (dictionaries, sentence packs), Voices (TTS and
+  its cache), Settings (backends, local AI, Anki, paths, density, doctor).
+- **Builders** — every classic builder form (sentence, dialogue, cloze,
+  grammar…, and Cascade's two-mode builder), and stacks of their batches.
+
+## Export and push
+
+Push and export go to the LinguaStudio engine's v2 family route when it
+answers (`/families/push`, `/families/export` — themes, accessibility flags
+and per-template skips ride along). Until then the batch goes through the
+classic routes the engine has always had: `/vocab/push` and the vault
+sidecar's `/vocab/export` for Vocab, Word and Visual cards (words grouped by
+the templates they keep), and `/push|export/<builder>` for the others.
+Anything a classic route can't carry is said once, never silently dropped.
+After either, the words are marked exported so the inventory shows ✓.
+
+## Two backends
 
 | Backend | Default | Owns |
 |---|---|---|
-| Vault sidecar | `:8749` | Storage (language documents, inventory, export flags) — and **supervision**: opening this workspace starts the engine below, closing it stops it a few minutes later |
-| LinguaStudio engine | `:8000` (started on demand) | Everything linguistic: dictionary, audio, cloze, all card builders, OCR, images, genanki, AnkiConnect |
+| Vault sidecar | `:8749` | Storage, inventory and the exported flag, lookups (`/translate/word`), audio, TTS, OCR, the vocab `.apkg` — and **supervision**: opening this workspace starts the engine below |
+| LinguaStudio engine | `:8000` | Card building, dictionary search, sentence corpus, AI cloze, images, genanki, AnkiConnect |
 
-Each half degrades independently, and every failure names the missing
-server and the fix.
+Each degrades on its own, and every failure names the missing server and the
+fix. Long operations show in the busy chip at the top right; the engine is
+kept alive while any run.
 
-## Confinement & in-flight work
+## Upgrading from 2.x
 
-Every tool lives inside the workspace views — nothing leaks into notes or
-the global palette beyond the open-workspace commands. Long operations
-(export, push, OCR) are tracked in the header's working chip; while any
-run, the engine is kept alive even if you close the views, and leaving
-the workspace mid-operation raises a warning that the running actions may
-be canceled. Batches are saved as you type, so nothing is ever lost to a
-restart.
+The 15-tab layout is gone. Old saved views open on the matching screen
+(Capture and Anki → Inbox, TTS → Manage › Voices, Settings → Manage ›
+Settings). Word lists from the old Vocab builder become a batch named
+*Vocabulary · <language>* on first load. Classic builder batches are
+untouched under Tools → Builders. The workspace theme setting is gone —
+card themes are chosen per batch.
 
 ## Regenerating the card registry
 
-The builder forms are extracted from LinguaStudio's own source. After the
-app adds or changes a card type:
+The classic builder forms are extracted from LinguaStudio's own source:
 
 ```sh
 node tools/extract-specs.js ~/dev/lingua-studio specs.json
 ```
 
-then merge the output into `CARD_REGISTRY` in `main.js` (the marker
-comment shows where it lives).
+then merge the output into `CARD_REGISTRY` in `main.js`.
 
-## Doctor & tests
-
-Nav rail → **Lingua doctor**: both backends, AnkiConnect, LinguaStudio's
-dependency doctor, and a registry sanity check, in one copyable report.
+## Tests
 
 ```sh
 node .obsidian/plugins/lingua-workspace/test/run.js
 ```
+
+Headless, no Obsidian, no network: the batch model, the screens'
+view-models (card previews, the language menu, gloss and pinyin parsing,
+Zhuyin, summaries), the export translation, stacks and routing.
