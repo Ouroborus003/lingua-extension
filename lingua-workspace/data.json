@@ -1,0 +1,35 @@
+{
+  "settings": {
+    "vaultSidecarUrl": "http://127.0.0.1:8749",
+    "linguaSidecarUrl": "http://127.0.0.1:8000",
+    "ankiConnectUrl": "http://127.0.0.1:8765",
+    "autoStartBackend": true,
+    "defaultLang": "zh",
+    "deckPrefix": "LinguaStudio",
+    "createVocabNotes": true,
+    "vocabNoteFolder": "01 Notes/linguistics/Vocab",
+    "generatedFolder": "08 Meta/Generated",
+    "apkgDir": "",
+    "theme": "sumi",
+    "density": "comfortable",
+    "aiUrl": "",
+    "aiModel": "",
+    "ttsDefaultEngine": "piper",
+    "ttsDefaultVoice": "♂ Conrad  ★ Male German"
+  },
+  "pending": {},
+  "batches": {},
+  "vocab": {
+    "de": {
+      "words": [],
+      "selected": [
+        "Meaning",
+        "Reading",
+        "Listening",
+        "Writing",
+        "Cloze Fill"
+      ]
+    }
+  },
+  "activeLang": "zh"
+}

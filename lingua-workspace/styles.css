@@ -1,0 +1,1316 @@
+/* Lingua Workspace — LinguaStudio's own design system, carried over.
+   Tokens are verbatim from the app's src/themes/_tokens.css (sumi is the
+   app default; washi / konstrukt / soviet / terminal selectable in
+   settings), namespaced --ls-* and scoped to the workspace surfaces so
+   the rest of the vault keeps its own theme. Component styling mirrors
+   the app's App.css / builders.css / primitives.css. */
+
+[data-lingua-theme] {
+    --ls-bg:        #15110c;
+    --ls-bg2:       #1d1812;
+    --ls-shell:     #0e0b07;
+    --ls-panel:     #211a14;
+    --ls-panel-hi:  #2a2218;
+    --ls-ink:       #ede4d0;
+    --ls-ink-mute:  #a39682;
+    --ls-ink-faint: #5f574a;
+    --ls-accent:    #c1442e;
+    --ls-accent-hi: #d14d36;
+    --ls-accent2:   #86c47f;
+    --ls-warn:      #e5a96a;
+    --ls-danger:    #d97070;
+    --ls-border:    rgba(237,228,208,0.08);
+    --ls-hairline:  rgba(237,228,208,0.04);
+    --ls-hover:     rgba(237,228,208,0.05);
+    --ls-hover-hi:  rgba(237,228,208,0.13);
+    --ls-font-text: 'IBM Plex Serif', Georgia, serif;
+    --ls-font-ui:   Inter, system-ui, sans-serif;
+    --ls-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --ls-radius-sm: 3px;
+    --ls-radius:    5px;
+    --ls-radius-lg: 8px;
+    --ls-shadow:    0 2px 12px rgba(0,0,0,0.35);
+}
+
+[data-lingua-theme="washi"] {
+    --ls-bg:        #f4ede0;
+    --ls-bg2:       #eee5d2;
+    --ls-shell:     #e9dfc9;
+    --ls-panel:     #ece2cc;
+    --ls-panel-hi:  #e3d6b9;
+    --ls-ink:       #2a2018;
+    --ls-ink-mute:  #6b5d4a;
+    --ls-ink-faint: #998973;
+    --ls-accent:    #a23b25;
+    --ls-accent-hi: #b6452c;
+    --ls-accent2:   #5a7b4e;
+    --ls-warn:      #b27a3a;
+    --ls-danger:    #b04848;
+    --ls-border:    rgba(42,32,24,0.10);
+    --ls-hairline:  rgba(42,32,24,0.05);
+    --ls-hover:     rgba(42,32,24,0.05);
+    --ls-hover-hi:  rgba(42,32,24,0.10);
+    --ls-shadow:    0 2px 12px rgba(42,32,24,0.12);
+}
+
+[data-lingua-theme="konstrukt"] {
+    --ls-bg:        #0c0c0d;
+    --ls-bg2:       #131316;
+    --ls-shell:     #09090a;
+    --ls-panel:     #18181d;
+    --ls-panel-hi:  #21212a;
+    --ls-ink:       #e8e8ec;
+    --ls-ink-mute:  #9d9da7;
+    --ls-ink-faint: #5e5e68;
+    --ls-accent:    #ff5e3a;
+    --ls-accent-hi: #ff7556;
+    --ls-accent2:   #36d399;
+    --ls-warn:      #f5b342;
+    --ls-danger:    #f06070;
+    --ls-border:    rgba(232,232,236,0.07);
+    --ls-hairline:  rgba(232,232,236,0.03);
+    --ls-hover:     rgba(232,232,236,0.05);
+    --ls-hover-hi:  rgba(232,232,236,0.10);
+    --ls-font-ui:   'Inter', 'Helvetica Neue', sans-serif;
+}
+
+[data-lingua-theme="soviet"] {
+    --ls-bg:        #1a0e0a;
+    --ls-bg2:       #211410;
+    --ls-shell:     #140a07;
+    --ls-panel:     #281914;
+    --ls-panel-hi:  #322018;
+    --ls-ink:       #f0d8b8;
+    --ls-ink-mute:  #b89878;
+    --ls-ink-faint: #806550;
+    --ls-accent:    #d92e1e;
+    --ls-accent-hi: #e84030;
+    --ls-accent2:   #e6b840;
+    --ls-warn:      #e6a020;
+    --ls-danger:    #f06050;
+    --ls-border:    rgba(240,216,184,0.08);
+    --ls-hairline:  rgba(240,216,184,0.04);
+    --ls-hover:     rgba(240,216,184,0.06);
+    --ls-hover-hi:  rgba(240,216,184,0.12);
+    --ls-font-text: 'Bodoni 72', 'Didot', Georgia, serif;
+}
+
+[data-lingua-theme="terminal"] {
+    --ls-bg:        #050a0a;
+    --ls-bg2:       #081010;
+    --ls-shell:     #030707;
+    --ls-panel:     #0a1614;
+    --ls-panel-hi:  #0f2020;
+    --ls-ink:       #aff5c2;
+    --ls-ink-mute:  #6dba88;
+    --ls-ink-faint: #3f7a55;
+    --ls-accent:    #4cdc70;
+    --ls-accent-hi: #6aef88;
+    --ls-accent2:   #4ad0d6;
+    --ls-warn:      #f5d442;
+    --ls-danger:    #ef6868;
+    --ls-border:    rgba(175,245,194,0.10);
+    --ls-hairline:  rgba(175,245,194,0.04);
+    --ls-hover:     rgba(175,245,194,0.06);
+    --ls-hover-hi:  rgba(175,245,194,0.12);
+    --ls-font-text: 'IBM Plex Mono', ui-monospace, monospace;
+    --ls-font-ui:   'IBM Plex Mono', ui-monospace, monospace;
+}
+
+/* Terminal's accent is bright on dark — its buttons read dark-on-accent. */
+[data-lingua-theme="terminal"] .lingua-view button.mod-cta,
+[data-lingua-theme="terminal"] .lingua-tab.is-active,
+[data-lingua-theme="terminal"] .lingua-nav-lang.is-active,
+[data-lingua-theme="terminal"] .lingua-tool-count,
+[data-lingua-theme="terminal"] .lingua-busy-chip.is-on {
+    color: var(--ls-bg) !important;
+}
+
+/* ---------- workbench frame ---------- */
+.lingua-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    background: var(--ls-bg);
+    color: var(--ls-ink);
+    font-family: var(--ls-font-ui);
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* the app's darker header strip */
+.lingua-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5em 1em;
+    padding: 8px 16px;
+    min-height: 44px;
+    background: var(--ls-shell);
+    border-bottom: 1px solid var(--ls-border);
+    flex: 0 0 auto;
+}
+
+.lingua-header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.lingua-accent-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ls-accent);
+}
+
+.lingua-header-name {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ls-ink-mute);
+    white-space: nowrap;
+}
+
+.lingua-busy-chip {
+    font-family: var(--ls-font-mono);
+    font-size: 11px;
+    color: var(--ls-ink-faint);
+    padding: 2px 9px;
+    border-radius: 999px;
+}
+
+.lingua-busy-chip.is-on {
+    color: #fff;
+    background: var(--ls-accent);
+}
+
+/* Language dropdown in header — compact button + menu */
+.lingua-lang-select-wrap {
+    position: relative;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+.lingua-lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    color: var(--ls-ink);
+    font-family: var(--ls-font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 90px;
+    justify-content: space-between;
+}
+
+.lingua-lang-btn:hover {
+    border-color: var(--ls-accent);
+    background: var(--ls-panel-hi);
+}
+
+.lingua-lang-btn:focus {
+    outline: none;
+    border-color: var(--ls-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ls-accent) 30%, transparent);
+}
+
+.lingua-lang-btn-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+.lingua-lang-btn-chev {
+    font-size: 9px;
+    color: var(--ls-ink-mute);
+    flex-shrink: 0;
+    transition: transform 0.15s;
+}
+
+.lingua-lang-select-wrap.open .lingua-lang-btn-chev {
+    transform: rotate(180deg);
+}
+
+.lingua-lang-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 180px;
+    max-height: 280px;
+    overflow-y: auto;
+    background: var(--ls-shell);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    box-shadow: var(--ls-shadow);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    padding: 4px;
+}
+
+.lingua-lang-select-wrap.open .lingua-lang-menu {
+    display: flex;
+}
+
+.lingua-lang-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 6px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--ls-ink);
+    font-family: var(--ls-font-ui);
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.lingua-lang-menu-item:hover,
+.lingua-lang-menu-item:focus {
+    background: var(--ls-hover);
+    outline: none;
+}
+
+.lingua-lang-menu-item.is-active {
+    background: color-mix(in srgb, var(--ls-accent) 15%, transparent);
+    color: var(--ls-ink);
+    font-weight: 500;
+}
+
+/* Stack Studio styles */
+.lingua-stack-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.lingua-stack-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    cursor: grab;
+    transition: background 0.1s, border-color 0.1s;
+}
+
+.lingua-stack-item:hover {
+    background: var(--ls-panel-hi);
+    border-color: var(--ls-accent);
+}
+
+.lingua-stack-item.is-dimmed {
+    opacity: 0.5;
+}
+
+.lingua-stack-item.is-dragging-source {
+    opacity: 0.4;
+    border-color: var(--ls-accent);
+}
+
+.lingua-stack-item.is-dragging {
+    position: fixed;
+    box-shadow: var(--ls-shadow);
+    border-color: var(--ls-accent);
+}
+
+.lingua-stack-drag {
+    color: var(--ls-ink-faint);
+    cursor: grab;
+    padding: 2px 6px;
+    user-select: none;
+}
+
+.lingua-stack-drag:active {
+    cursor: grabbing;
+}
+
+.lingua-stack-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lingua-stack-info strong {
+    display: block;
+    font-size: 13px;
+    color: var(--ls-ink);
+}
+
+.lingua-stack-meta {
+    display: block;
+    font-size: 11px;
+    color: var(--ls-ink-mute);
+    font-family: var(--ls-font-mono);
+}
+
+.lingua-stack-deck-input {
+    width: 100%;
+    max-width: 360px;
+}
+
+.lingua-stack-preview {
+    margin-top: 8px;
+}
+
+.lingua-stack-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lingua-stack-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+}
+
+.lingua-step-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ls-accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 50%;
+}
+
+.lingua-step-info {
+    flex: 1;
+}
+
+.lingua-step-info strong {
+    display: block;
+    color: var(--ls-ink);
+}
+
+.lingua-step-meta {
+    display: block;
+    font-size: 11px;
+    color: var(--ls-ink-mute);
+    font-family: var(--ls-font-mono);
+}
+
+.lingua-stack-summary {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--ls-ink-mute);
+    font-family: var(--ls-font-mono);
+}
+
+/* nav-item style tabs, the app's active tint */
+.lingua-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.lingua-tab {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 7px 11px;
+    border-radius: 5px;
+    color: var(--ls-ink-mute);
+    cursor: pointer;
+    font-family: var(--ls-font-ui);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.lingua-tab:hover {
+    background: var(--ls-hover);
+    color: var(--ls-ink);
+}
+
+.lingua-tab.is-active {
+    background: color-mix(in srgb, var(--ls-accent) 18%, transparent);
+    color: var(--ls-ink);
+}
+
+.lingua-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 18px 22px 40px;
+    max-width: 74em;
+    width: 100%;
+    margin: 0 auto;
+    scrollbar-color: var(--ls-ink-faint) transparent;
+}
+
+.lingua-lede {
+    color: var(--ls-ink-mute);
+    font-family: var(--ls-font-text);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 52em;
+    margin: 0 0 16px;
+}
+
+/* ---------- forms (the app's .row-form + .field) ---------- */
+.lingua-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 16px;
+}
+
+.lingua-builder-form,
+.lingua-dict-bar {
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-lg);
+    padding: 14px 16px;
+}
+
+.lingua-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 180px;
+    flex: 1 1 180px;
+    max-width: 22em;
+}
+
+.lingua-field-wide {
+    flex: 1 1 100%;
+    max-width: none;
+}
+
+.lingua-field label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ls-ink-faint);
+    font-weight: 500;
+}
+
+.lingua-view input[type="text"],
+.lingua-view select,
+.lingua-view textarea,
+.lingua-view input[type="file"] {
+    background: var(--ls-bg2);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    color: var(--ls-ink);
+    font-family: var(--ls-font-ui);
+    font-size: 13px;
+    padding: 7px 10px;
+    outline: none;
+    box-shadow: none;
+}
+
+.lingua-view input[type="text"]:focus,
+.lingua-view select:focus,
+.lingua-view textarea:focus {
+    border-color: var(--ls-accent);
+    background: var(--ls-panel);
+}
+
+.lingua-view input::placeholder,
+.lingua-view textarea::placeholder {
+    color: var(--ls-ink-faint);
+}
+
+.lingua-view textarea {
+    resize: vertical;
+    font-family: var(--ls-font-text);
+    line-height: 1.55;
+    min-height: 64px;
+}
+
+.lingua-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+/* the app's buttons */
+.lingua-view button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 5px;
+    border: 1px solid var(--ls-border);
+    background: var(--ls-hover);
+    color: var(--ls-ink);
+    font-family: var(--ls-font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: none;
+    height: auto;
+}
+
+.lingua-view button:hover:not(:disabled) {
+    background: var(--ls-hover-hi);
+}
+
+.lingua-view button.mod-cta {
+    background: var(--ls-accent);
+    border-color: transparent;
+    color: #fff;
+}
+
+.lingua-view button.mod-cta:hover:not(:disabled) {
+    background: var(--ls-accent-hi);
+}
+
+.lingua-view button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.lingua-body.is-rtl input,
+.lingua-body.is-rtl textarea,
+.lingua-body.is-rtl .lingua-term {
+    direction: rtl;
+}
+
+/* ---------- batch tables (the app's .batch-list) ---------- */
+.lingua-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-lg);
+    overflow: hidden;
+}
+
+.lingua-table th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: var(--ls-ink-faint);
+    background: var(--ls-bg2);
+    padding: 8px 14px;
+}
+
+.lingua-table td {
+    padding: 10px 14px;
+    border-top: 1px solid var(--ls-hairline);
+    vertical-align: top;
+    line-height: 1.45;
+    color: var(--ls-ink);
+}
+
+.lingua-table tbody tr:hover td {
+    background: var(--ls-hover);
+}
+
+.lingua-term {
+    font-weight: 600;
+    font-family: var(--ls-font-text);
+    font-size: 1.06em;
+}
+
+.lingua-row-tools {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.lingua-tool {
+    background: transparent !important;
+    border: none !important;
+    padding: 3px 5px !important;
+    border-radius: 4px;
+    color: var(--ls-ink-faint) !important;
+}
+
+.lingua-tool:hover {
+    background: var(--ls-hover-hi) !important;
+    color: var(--ls-ink) !important;
+}
+
+/* ---------- panels (the app's .composite-section) ---------- */
+.lingua-pending,
+.lingua-anki-pick {
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-lg);
+    padding: 14px 16px;
+    margin: 0 0 16px;
+}
+
+.lingua-pending .lingua-table,
+.lingua-anki-pick .lingua-table {
+    border: 1px solid var(--ls-hairline);
+}
+
+.lingua-pending-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.lingua-pending h3,
+.lingua-anki-pick h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ls-ink-faint);
+    font-weight: 600;
+}
+
+.lingua-save {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.lingua-save input {
+    flex: 1 1 auto;
+}
+
+.lingua-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 14em;
+    overflow-y: auto;
+}
+
+.lingua-check {
+    font-size: 13px;
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: var(--ls-ink);
+}
+
+.lingua-check:hover {
+    background: var(--ls-hover);
+}
+
+.lingua-anki-note {
+    margin-bottom: 12px;
+}
+
+.lingua-anki-actions {
+    margin-top: 6px;
+}
+
+/* ---------- builders: groups + tool grid ---------- */
+.lingua-group {
+    margin: 0 0 20px;
+}
+
+.lingua-group-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 8px;
+}
+
+.lingua-group-icon {
+    display: flex;
+    color: var(--ls-ink-faint);
+}
+
+.lingua-group-icon svg {
+    width: 13px;
+    height: 13px;
+}
+
+.lingua-group-name {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-ink-faint);
+    font-weight: 600;
+}
+
+.lingua-tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
+    gap: 8px;
+}
+
+.lingua-tool-card {
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    padding: 10px 12px;
+    cursor: pointer;
+    min-height: 4.2em;
+    position: relative;
+}
+
+.lingua-tool-card:hover {
+    background: var(--ls-panel-hi);
+    border-color: var(--ls-hover-hi);
+}
+
+.lingua-tool-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--ls-ink);
+    margin-bottom: 3px;
+}
+
+.lingua-tool-desc {
+    color: var(--ls-ink-mute);
+    font-family: var(--ls-font-text);
+    font-size: 12px;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.lingua-tool-count {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-family: var(--ls-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--ls-accent);
+    border-radius: 999px;
+    padding: 1px 7px;
+}
+
+/* ---------- builder detail ---------- */
+.lingua-builder-top {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 0 0 14px;
+}
+
+.lingua-back {
+    background: transparent !important;
+    border: none !important;
+    color: var(--ls-ink-mute) !important;
+    font-size: 12px !important;
+    padding: 4px 7px !important;
+    flex: 0 0 auto;
+}
+
+.lingua-back:hover {
+    background: var(--ls-hover) !important;
+    color: var(--ls-ink) !important;
+}
+
+.lingua-builder-title h2 {
+    margin: 0;
+    font-family: var(--ls-font-text);
+    font-size: 1.35em;
+    font-weight: 600;
+    color: var(--ls-ink);
+}
+
+/* ---------- dictionary ---------- */
+.lingua-dict-bar input[type="text"] {
+    flex: 1 1 14em;
+}
+
+.lingua-more {
+    margin-top: 10px;
+}
+
+/* ---------- cloze ---------- */
+.lingua-cloze-result {
+    background: var(--ls-panel);
+    border: 1px solid var(--ls-border);
+    border-left: 3px solid var(--ls-accent);
+    border-radius: var(--ls-radius-lg);
+    padding: 14px 18px;
+}
+
+.lingua-cloze-text {
+    font-family: var(--ls-font-text);
+    font-size: 1.2em;
+    line-height: 1.65;
+    color: var(--ls-ink);
+    margin: 0 0 6px;
+}
+
+.lingua-cloze-gloss {
+    font-family: var(--ls-font-text);
+    color: var(--ls-ink-mute);
+    margin: 0 0 6px;
+}
+
+/* ---------- studio ---------- */
+.lingua-template-block summary {
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: var(--ls-accent);
+    padding: 4px 0;
+}
+
+.lingua-template-block pre {
+    max-height: 18em;
+    overflow: auto;
+    font-family: var(--ls-font-mono);
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ls-ink);
+    background: var(--ls-bg2);
+    padding: 10px 13px;
+    border-radius: var(--ls-radius);
+    border: 1px solid var(--ls-hairline);
+    white-space: pre-wrap;
+}
+
+/* ---------- tools ---------- */
+.lingua-ocr-text {
+    width: 100%;
+    margin: 8px 0;
+}
+
+.lingua-img-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7.5em, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.lingua-img-cell {
+    background: var(--ls-bg2);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--ls-ink-faint);
+    text-align: center;
+    padding: 4px;
+}
+
+.lingua-img-cell:hover {
+    border-color: var(--ls-accent);
+}
+
+.lingua-img-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ---------- shared bits ---------- */
+.lingua-empty {
+    background: transparent;
+    border: 1px dashed var(--ls-border);
+    border-radius: var(--ls-radius-lg);
+    padding: 22px;
+    text-align: center;
+    color: var(--ls-ink-faint);
+    font-size: 13px;
+}
+
+.lingua-hint {
+    color: var(--ls-ink-mute);
+    font-family: var(--ls-font-text);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.lingua-error {
+    color: var(--ls-danger);
+    font-size: 13px;
+}
+
+/* ---------- nav rail (the app's sidebar) ---------- */
+.lingua-nav {
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    background: var(--ls-shell);
+    color: var(--ls-ink);
+    font-family: var(--ls-font-ui);
+}
+
+.lingua-nav-langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 0 2px;
+}
+
+.lingua-nav-lang {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-family: var(--ls-font-ui);
+    color: var(--ls-ink-mute);
+    cursor: pointer;
+}
+
+.lingua-nav-lang:hover {
+    color: var(--ls-ink);
+    background: var(--ls-hover);
+}
+
+.lingua-nav-lang.is-active {
+    background: color-mix(in srgb, var(--ls-accent) 18%, transparent);
+    color: var(--ls-ink);
+    font-weight: 600;
+}
+
+.lingua-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.lingua-nav-sep {
+    height: 1px;
+    background: var(--ls-border);
+    margin: 8px 10px;
+}
+
+.lingua-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--ls-ink-mute);
+    cursor: pointer;
+}
+
+.lingua-nav-link:hover {
+    background: var(--ls-hover);
+    color: var(--ls-ink);
+}
+
+.lingua-nav-icon {
+    display: flex;
+    color: var(--ls-ink-faint);
+}
+
+.lingua-nav-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.lingua-nav-link:hover .lingua-nav-icon {
+    color: var(--ls-accent);
+}
+
+.lingua-nav-status {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--ls-font-mono);
+    font-size: 11px;
+    color: var(--ls-ink-mute);
+    border-top: 1px solid var(--ls-border);
+    padding: 10px 10px 2px;
+}
+
+.lingua-status-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.lingua-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ls-ink-faint);
+}
+
+.lingua-status-dot.is-up { background: var(--ls-accent2); }
+.lingua-status-dot.is-down { background: var(--ls-danger); }
+
+.lingua-status-refresh {
+    align-self: flex-start;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 2px 0;
+    color: var(--ls-ink-faint);
+    cursor: pointer;
+    font-family: var(--ls-font-mono);
+    font-size: 11px;
+    text-decoration: underline;
+}
+
+.lingua-status-refresh:hover {
+    color: var(--ls-ink);
+}
+
+/* ---------- example sentences ---------- */
+.lingua-sentence-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 4px;
+    border-top: 1px solid var(--ls-hairline);
+}
+
+.lingua-sentence-row:first-of-type {
+    border-top: none;
+}
+
+.lingua-sentence-body {
+    min-width: 0;
+}
+
+.lingua-sentence-text {
+    font-family: var(--ls-font-text);
+    font-size: 1.1em;
+    line-height: 1.55;
+    color: var(--ls-ink);
+}
+
+.lingua-sentence-gloss {
+    font-family: var(--ls-font-text);
+    font-size: 0.92em;
+    color: var(--ls-ink-mute);
+    margin-top: 2px;
+}
+
+/* ---------- pack manager ---------- */
+.lingua-pack-busy {
+    color: var(--ls-warn);
+    font-family: var(--ls-font-mono);
+    font-size: 12px;
+}
+
+/* ---------- chips (mode / template selectors) ---------- */
+.lingua-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.lingua-chip {
+    background: var(--ls-bg2) !important;
+    border: 1px solid var(--ls-border) !important;
+    box-shadow: none !important;
+    border-radius: 999px;
+    padding: 5px 13px !important;
+    font-size: 12px;
+    color: var(--ls-ink-mute) !important;
+    cursor: pointer;
+}
+
+.lingua-chip:hover {
+    color: var(--ls-ink) !important;
+    background: var(--ls-hover-hi) !important;
+}
+
+.lingua-chip.is-active {
+    background: color-mix(in srgb, var(--ls-accent) 20%, transparent) !important;
+    border-color: color-mix(in srgb, var(--ls-accent) 45%, transparent) !important;
+    color: var(--ls-ink) !important;
+}
+
+/* ---------- cascade: beat chips + config rows ---------- */
+.lingua-field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: end;
+}
+
+.lingua-beat-chips {
+    display: inline-flex;
+    gap: 5px;
+    margin: 4px 0;
+}
+
+.lingua-beat-chip {
+    width: 30px;
+    height: 30px;
+    padding: 0 !important;
+    border-radius: 6px;
+    background: var(--ls-bg2) !important;
+    border: 1px solid var(--ls-border) !important;
+    box-shadow: none !important;
+    color: var(--ls-ink-mute) !important;
+    font-family: var(--ls-font-mono);
+    cursor: pointer;
+}
+
+.lingua-beat-chip.is-active {
+    background: var(--ls-accent) !important;
+    border-color: var(--ls-accent) !important;
+    color: #fff !important;
+}
+
+[data-lingua-theme="terminal"] .lingua-beat-chip.is-active {
+    color: var(--ls-bg) !important;
+}
+
+/* ---------- density: compact (the app's density token) ---------- */
+[data-lingua-density="compact"].lingua-view {
+    font-size: 12px;
+}
+
+[data-lingua-density="compact"] .lingua-body {
+    padding: 12px 16px 30px;
+}
+
+[data-lingua-density="compact"] .lingua-view input[type="text"],
+[data-lingua-density="compact"] .lingua-view select,
+[data-lingua-density="compact"] .lingua-view textarea {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+[data-lingua-density="compact"] .lingua-view button {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
+[data-lingua-density="compact"] .lingua-table td {
+    padding: 6px 10px;
+}
+
+[data-lingua-density="compact"] .lingua-pending,
+[data-lingua-density="compact"] .lingua-anki-pick {
+    padding: 10px 12px;
+}
+
+/* ---------- doctor ---------- */
+[data-lingua-theme] .lingua-doctor {
+    max-height: 24em;
+    overflow: auto;
+    font-family: var(--ls-font-mono);
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: var(--ls-ink);
+    background: var(--ls-bg);
+    border: 1px solid var(--ls-border);
+    padding: 12px 14px;
+    border-radius: var(--ls-radius);
+    white-space: pre-wrap;
+}
+
+/* ---------- relate modal (Stage 9) ---------- */
+[data-lingua-theme].lingua-relate input[type="text"],
+[data-lingua-theme].lingua-relate select {
+    background: var(--ls-bg2);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    color: var(--ls-ink);
+    padding: 6px 10px;
+    width: 100%;
+}
+
+[data-lingua-theme].lingua-relate .lingua-field {
+    min-width: 200px;
+    flex: 1 1 200px;
+}
+
+[data-lingua-theme] .lingua-relate-target {
+    position: relative;
+}
+
+[data-lingua-theme] .lingua-relate-suggest {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: var(--ls-bg2);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius);
+    max-height: 16em;
+    overflow-y: auto;
+    margin-top: 2px;
+    display: none;
+}
+
+[data-lingua-theme] .lingua-relate-suggest:not(:empty) {
+    display: block;
+}
+
+[data-lingua-theme] .lingua-relate-suggest-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    color: var(--ls-ink-mute);
+    border-bottom: 1px solid var(--ls-border);
+    font-size: 12.5px;
+}
+
+[data-lingua-theme] .lingua-relate-suggest-item:last-child {
+    border-bottom: none;
+}
+
+[data-lingua-theme] .lingua-relate-suggest-item:hover {
+    background: var(--ls-panel-hi);
+    color: var(--ls-ink);
+}
+
+[data-lingua-theme] .lingua-relate-family h4 {
+    margin: 12px 0 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ls-ink-faint);
+    font-weight: 500;
+}
+
+[data-lingua-theme] .lingua-relate-family .lingua-chip {
+    padding: 2px 10px;
+    font-size: 12.5px;
+}
+
+[data-lingua-theme] .lingua-relate-family .lingua-chip:hover {
+    background: var(--ls-panel-hi);
+    color: var(--ls-ink);
+}
