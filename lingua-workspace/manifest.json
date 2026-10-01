@@ -1,9 +1,9 @@
 {
   "id": "lingua-workspace",
   "name": "Lingua Workspace",
-  "version": "2.11.0",
+  "version": "3.0.0",
   "minAppVersion": "1.4.0",
-  "description": "LinguaStudio ported into the vault: every live card builder, Card Studio, OCR, image search, dictionary, AI cloze, stack export, and the Anki round-trip \u2014 one native Lingua workspace over the LinguaStudio engine.",
+  "description": "LinguaStudio in the vault, in the vault's own theme: a sidebar of word batches — one word list becomes many card types — with Card Studio, Inbox, stacks, the classic builders, OCR, dictionary and the Anki round-trip.",
   "author": "vault operator",
   "isDesktopOnly": false
 }

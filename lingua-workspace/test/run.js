@@ -259,7 +259,8 @@ ok("qa_ladder stages present",
     R.specs.qa_ladder.fields.find((f) => f.key === "stage").options.length === 4);
 ok("no spec text carries section citations",
     !JSON.stringify(R).includes("§"));
-ok("five app themes, sumi first", T.THEMES.length === 5 && T.THEMES[0] === "sumi");
+ok("the workspace has no theme of its own (it wears the vault's); card themes live in V4_THEMES",
+    !("THEMES" in T) && T.V4_THEMES.length > 0);
 
 /* ================= spec helpers ================= */
 console.log("spec helpers");
@@ -668,6 +669,7 @@ console.log("v4MakeWord");
     ok("reading/meaning default empty, senses empty", a.P === "" && a.M === "" && Array.isArray(a.senses) && a.senses.length === 0);
     ok("confidence defaults to 1 (typed)", a.conf === 1);
     ok("ids are unique", a.id !== b.id);
+    ok("ids never contain ':' (card keys are oi:wordId:ti)", !a.id.includes(":"));
     ok("overrides apply", T.v4MakeWord("x", { P: "p", src: "Boox", conf: 0.6 }).src === "Boox");
 }
 
@@ -851,3 +853,218 @@ console.log("v4BatchToFamilyGroups");
         ok(type + " emits only known family fields" + (badKeys.length ? ": " + badKeys.join(",") : ""), badKeys.length === 0);
     }
 }
+
+/* ================= v4 presentation (the workspace screens) =================
+ * The view-models and translations the v4 screens render from: card themes,
+ * Card Studio catalog, the language menu, dictionary answers -> word fields,
+ * pinyin, card previews, summaries, the classic-route export, stacks and
+ * routing. Pure, so nothing here needs Obsidian. */
+console.log("v4 presentation");
+
+ok("seventeen card themes, unique ids, sumi among them",
+    T.V4_THEMES.length === 17 && new Set(T.V4_THEMES.map((t) => t[0])).size === 17
+        && T.V4_THEMES.some((t) => t[0] === "sumi"));
+ok("unknown theme falls back to sumi", T.v4Theme("nope")[0] === "sumi");
+ok("every catalog word type is a real batch type",
+    T.V4_CATALOG.filter((c) => c.wt).every((c) => !!T.v4Wt(c.wt)));
+ok("every catalog builder is a real classic builder",
+    T.V4_CATALOG.filter((c) => c.builder).every((c) => !!T.specFor(c.builder)));
+ok("every catalog group has a heading",
+    T.V4_CATALOG.every((c) => T.V4_CATALOG_GROUPS.some((g) => g[0] === c.grp)));
+
+console.log("language menu");
+ok("every registry language has a native name and a group",
+    T.LANGS.every((l) => T.V4_LANG_META[l.vault] && T.V4_LANG_GROUPS.some((g) => g[0] === T.V4_LANG_META[l.vault][1])));
+{
+    const g = T.v4LangGroups("");
+    ok("no query keeps every language, once", g.reduce((n, x) => n + x.items.length, 0) === T.LANGS.length);
+    ok("CJK group comes first and holds Mandarin", g[0].key === "cjk" && g[0].items.some((l) => l.vault === "zh"));
+    const r = T.v4LangGroups("deutsch");
+    ok("a native-name query finds German", r.length === 1 && r[0].items.length === 1 && r[0].items[0].vault === "de");
+    ok("a query with no match says so", T.v4LangGroups("klingon")[0].items.length === 0);
+}
+ok("sameLang compares base subtags", T.sameLang("zh-hans", "zh") && !T.sameLang("yue", "zh"));
+
+console.log("gloss + pinyin");
+{
+    const p = T.v4ParseGloss("[da3] to beat; to strike; to hit; to break; to type; to mix up; CL:個|个[ge4] [da2] dozen");
+    ok("first reading kept", p.reading === "da3");
+    ok("only the first reading's senses", !p.senses.includes("dozen") && p.senses[0] === "to beat");
+    ok("CL: classifier notes dropped", !p.senses.some((s) => /^CL:/.test(s)));
+    const x = T.v4ParseGloss("[wei4 dao5] variant of 味道|味道[wei4 dao5]; flavor");
+    ok("trad|simp[pinyin] cross-refs keep just the word", x.senses[0] === "variant of 味道");
+    ok("HTML is stripped", T.v4ParseGloss("<b>Haus</b>; <i>home</i>").senses.join("|") === "Haus|home");
+}
+ok("one sense -> meaning", T.v4MeaningFromSenses(["apple"]).M === "apple");
+ok("a short run of close senses reads as one meaning",
+    T.v4MeaningFromSenses(["flavor", "smell", "taste"]).M === "flavor; smell; taste");
+ok("many senses -> a picker, no meaning yet", (() => {
+    const m = T.v4MeaningFromSenses(["to beat", "to strike", "to hit", "to break", "to type"]);
+    return m.M === "" && m.senses.length === 5;
+})());
+ok("tone numbers -> marks", T.v4PinyinMarks("ping2 guo3") === "píng guǒ");
+ok("neutral tone loses its digit", T.v4PinyinMarks("pu2 tao5") === "pú tao");
+ok("ü from u: and v", T.v4PinyinMarks("lu:4 nv3") === "lǜ nǚ");
+ok("mark sits on o in ou, on e in ei", T.v4PinyinMarks("you3 mei2") === "yǒu méi");
+ok("capitals keep their case", T.v4PinyinMarks("Zhong1 guo2") === "Zhōng guó");
+ok("marked pinyin passes through", T.v4PinyinMarks("xué xí") === "xué xí");
+ok("zhuyin from marks", T.v4Zhuyin("píng guǒ") === "ㄆㄧㄥˊ ㄍㄨㄛˇ");
+ok("zhuyin neutral tone in front", T.v4Zhuyin("pú tao") === "ㄆㄨˊ ˙ㄊㄠ");
+ok("zhuyin after j/q/x reads u as ü", T.v4Zhuyin("xué xí") === "ㄒㄩㄝˊ ㄒㄧˊ");
+ok("zhuyin whole syllables (zhi/shi, y/w)", T.v4Zhuyin("shì yǒu wǒ") === "ㄕˋ ㄧㄡˇ ㄨㄛˇ");
+ok("zhuyin from tone numbers", T.v4Zhuyin("jiao3 zi5") === "ㄐㄧㄠˇ ˙ㄗ");
+ok("zhuyin erhua", T.v4Zhuyin("diǎnr") === "ㄉㄧㄢˇㄦ");
+ok("zhuyin refuses a non-pinyin syllable rather than half-convert", T.v4Zhuyin("píng xyz") === "");
+{
+    const w = T.v4MakeWord("苹果");
+    const patch = T.v4LookupPatch(w, { provider: "cedict", reading: "ping2 guo3", gloss: "[ping2 guo3] apple" }, "zh");
+    ok("lookup fills marked pinyin, meaning and zhuyin",
+        patch.P === "píng guǒ" && patch.M === "apple" && patch.Z === "ㄆㄧㄥˊ ㄍㄨㄛˇ");
+    const typed = T.v4MakeWord("苹果", { P: "mine", M: "mine" });
+    const kept = T.v4LookupPatch(typed, { provider: "x", reading: "r", gloss: "g" }, "zh");
+    ok("lookup never overwrites what was typed", !("P" in kept) && !("M" in kept));
+    ok("no provider -> no patch", Object.keys(T.v4LookupPatch(w, { provider: "", gloss: "" }, "zh")).length === 0);
+    const de = T.v4LookupPatch(T.v4MakeWord("Haus"), { provider: "stardict", reading: "haʊs", gloss: "house" }, "de");
+    ok("non-Mandarin readings pass through, no zhuyin", de.P === "haʊs" && de.M === "house" && !("Z" in de));
+}
+
+console.log("card previews");
+{
+    const row = { Simplified: "苹果", Pinyin: "píng guǒ", Meaning: "apple", Sentence: "我每天吃一个苹果。", SentenceTranslation: "I eat an apple every day." };
+    const f = T.v4CardView("vocab", row, 0, "front", "sumi");
+    ok("meaning front shows the word big", f.front && f.heroBig === "苹果" && f.prompt === "What does it mean?");
+    ok("preview carries the theme colours", f.bg === T.v4Theme("sumi")[2] && f.ac === T.v4Theme("sumi")[4]);
+    const cz = T.v4CardView("vocab", row, 4, "front", "paper");
+    ok("cloze front blanks the word in the example", cz.heroText === "我每天吃一个＿＿。");
+    const b = T.v4CardView("vocab", row, 0, "back", "sumi");
+    ok("back colours each character by its tone", b.chars.length === 2 && b.chars[0].c === "#f5a524" && b.chars[1].c === "#4cc38a");
+    ok("back lists meaning then example", b.blocks[0].l === "Meaning" && b.blocks[1].l === "Example");
+    ok("light themes use the light tone palette",
+        T.v4CardView("vocab", row, 0, "back", "paper").chars[0].c === "#9a5b00");
+    const m = T.v4CardView("matching", { Word1: "a", Meaning1: "1", Word2: "b", Meaning2: "2" }, 0, "back", "sumi");
+    ok("matching back lists each pair", m.blocks.length === 2 && m.blocks[1].l === "b");
+    ok("unknown type falls back without throwing", !!T.v4CardView("nope", {}, 0, "front", "x"));
+}
+
+console.log("summaries + missing fields");
+{
+    const b = v4Batch({ rules: [{ id: "r1", on: 1, cond: "chars", val: "1", act: "skip", aval: "Writing" }] });
+    const s = T.v4Summary(b);
+    ok("summary counts words, types and cards", s.words === 2 && s.types === 1 && s.cards === 10);
+    ok("skipped cards are not live", s.live === 9 && s.skipped === 1);
+    ok("words needing a look are counted", s.needN === 1);
+    const vb = v4Batch({ outs: [{ type: "visual", tpls: [0, 1], themes: null, def: null, sub: "V" }] });
+    const miss = T.v4MissingFor(vb, 0);
+    ok("visual without images is flagged per word", miss.count === 2 && miss.fields.includes("Image"));
+    ok("group types never report per-word gaps",
+        T.v4MissingFor(v4Batch({ outs: [{ type: "matching", tpls: [0], themes: null, def: null, sub: "M" }] }), 0).count === 0);
+    ok("every word type has editable and required fields",
+        T.V4_WT.filter((t) => !t.group).every((t) => T.V4_EDITABLE[t.id] && T.V4_REQUIRED[t.id]));
+}
+
+console.log("classic-route export");
+{
+    const b = v4Batch({
+        words: [
+            T.v4MakeWord("苹果", { P: "píng guǒ", M: "apple", audio: "Forvo", audioFile: "cmn-苹果.mp3" }),
+            T.v4MakeWord("葡萄酒", { P: "pú tao jiǔ", M: "wine", audio: "TTS" }),
+        ],
+        rules: [{ id: "r1", on: 1, cond: "chars", val: "2", act: "skip", aval: "Writing" }],
+    });
+    const { jobs } = T.v4ExportJobs(b);
+    ok("a skipped template splits the vocab job by template set", jobs.length === 2 && jobs.every((j) => j.kind === "vocab"));
+    const full = jobs.find((j) => j.payload.words[0].word === "苹果");
+    const part = jobs.find((j) => j.payload.words[0].word === "葡萄酒");
+    ok("all five templates send the engine's classic default", full.payload.selectedTemplates.length === 0);
+    ok("the skipped template is left out of that note", !part.payload.selectedTemplates.includes("Writing")
+        && part.payload.selectedTemplates.length === 4);
+    ok("the resolved audio filename rides along", full.payload.words[0].audio === "cmn-苹果.mp3");
+    ok("deck is the batch deck plus the subdeck", full.deck === "LinguaStudio::Test::Vocab");
+    ok("cards counted per template kept", full.cards === 5 && part.cards === 4);
+    const key = T.v4Cards(b).find((c) => c.w.S === "苹果" && c.ti === 0).key;
+    const ovb = Object.assign({}, b, { ov: { [key]: { f: { Meaning: "an apple" } } } });
+    const ovJobs = T.v4ExportJobs(ovb).jobs;
+    ok("a card with its own edits becomes its own single-template note",
+        ovJobs.some((j) => j.payload.words[0].meaning === "an apple"
+            && JSON.stringify(j.payload.selectedTemplates) === '["Meaning"]'));
+    const root = T.v4ExportJobs(b, "LinguaStudio::Stack::01 Test").jobs[0];
+    ok("a deck root re-files the batch (stacks)", root.deck === "LinguaStudio::Stack::01 Test::Vocab");
+
+    const words = [];
+    for (let i = 0; i < 8; i++) words.push(T.v4MakeWord("字" + i, { P: "zì", M: "m" + i, audio: "a" }));
+    const cf = T.v4ExportJobs(v4Batch({ words, outs: [{ type: "cflash", tpls: [0], themes: null, def: null, sub: "Flash" }] })).jobs[0];
+    ok("cascade goes through the cascade builder", cf.kind === "builder" && cf.type === "cascade" && cf.payload.batch.length === 1);
+    ok("cascade carries its definitions (the Def panel is never empty)",
+        JSON.parse(cf.payload.batch[0].definitions_json)["字0"].m === "m0");
+    const tone = T.v4ExportJobs(v4Batch({ outs: [{ type: "tone", tpls: [0, 1], themes: null, def: null, sub: "T" }] })).jobs[0];
+    ok("tone drill rows carry one tone per syllable", tone.type === "tone_drill" && tone.payload.batch[0].tones === "2-3");
+    const tm = T.v4ExportJobs(v4Batch({ outs: [{ type: "timed", tpls: [0], themes: null, def: null, sub: "R" }] })).jobs[0];
+    ok("timed recall exports through its classic builder", tm.type === "timed_recall" && tm.payload.batch.length === 2);
+    const mt = T.v4ExportJobs(v4Batch({ words, outs: [{ type: "matching", tpls: [0, 1], themes: null, def: null, sub: "M" }] })).jobs[0];
+    ok("matching sends each word once, meaning on the right", mt.payload.batch.length === 8 && mt.payload.batch[0].right === "m0");
+    ok("every classic builder named is a real registry type",
+        Object.values(T.V4_CLASSIC_BUILDER).every((t) => !!T.specFor(t)));
+    const themed = T.v4ExportJobs(v4Batch({ flags: { MicroSteps: 1 } }));
+    ok("what the classic routes cannot carry is said, not dropped", themed.notes.some((n) => /accessibility/.test(n)));
+    ok("tone numbers from marks", T.v4ToneNumbers("mā má mǎ mà ma") === "1-2-3-4-5");
+}
+
+console.log("stacks");
+{
+    const b1 = v4Batch({ id: "b1", name: "Fruit" }), b2 = v4Batch({ id: "b2", name: "Tones" });
+    const st = T.v4StackSteps({ name: "Week 3 · Food", steps: ["b2", "gone", "b1"] }, [b1, b2], "LinguaStudio");
+    ok("stack root sits under the deck prefix", st.root === "LinguaStudio::Week 3 · Food");
+    ok("missing batches are skipped, numbering stays dense",
+        st.steps.length === 2 && st.steps[0].n === 1 && st.steps[1].batch.id === "b1");
+    ok("each step is a numbered subdeck", st.steps[0].deck === "LinguaStudio::Week 3 · Food::01 Tones");
+}
+
+console.log("routing + small helpers");
+ok("every old section still lands on a screen",
+    T.SECTIONS.every((s) => T.V4_SCREENS.includes(T.v4RouteFor(s).screen)));
+ok("settings and tts land in Manage", T.v4RouteFor("settings").sub === "settings" && T.v4RouteFor("tts").sub === "voices");
+ok("capture lands in the Inbox", T.v4RouteFor("capture").screen === "inbox");
+ok("unknown -> batch", T.v4RouteFor("nope").screen === "batch");
+ok("ago: hours", T.v4Ago(1000, 1000 + 2 * 3600 * 1000) === "2 hours ago");
+ok("ago: yesterday", T.v4Ago(1000, 1000 + 26 * 3600 * 1000) === "yesterday");
+ok("ago: none without a time", T.v4Ago(0, 5) === "");
+ok("split words: lines, spaces, CJK commas, no duplicates",
+    JSON.stringify(T.v4SplitWords("苹果\n香蕉  葡萄、苹果,西瓜")) === '["苹果","香蕉","葡萄","西瓜"]');
+
+console.log("language-gated card types");
+ok("non-Mandarin batches start from Word", (() => {
+    const nb = T.v4NewBatch("Haus", "de", "Typed");
+    return nb.outs.length === 1 && nb.outs[0].type === "word" && nb.outs[0].tpls.length === 4;
+})());
+ok("Vocab is Mandarin's (any zh subtag)", T.v4TypeAvailable("vocab", "zh-hant") && !T.v4TypeAvailable("vocab", "de"));
+ok("Word is every other language's", T.v4TypeAvailable("word", "de") && !T.v4TypeAvailable("word", "zh"));
+ok("tones for Mandarin and Cantonese only", T.v4TypeAvailable("tone", "yue") && !T.v4TypeAvailable("tone", "ja"));
+ok("stroke order needs a Han script", T.v4TypeAvailable("hanzi", "ja") && !T.v4TypeAvailable("hanzi", "ko"));
+ok("script-neutral types are open to all", T.v4TypeAvailable("matching", "ar") && T.v4TypeAvailable("dictation", "ko"));
+ok("export can be limited to some outs", (() => {
+    const b = v4Batch({ outs: [{ type: "vocab", tpls: [0], themes: null, def: null, sub: "V" },
+        { type: "timed", tpls: [0], themes: null, def: null, sub: "T" }] });
+    const r = T.v4ExportJobs(b, "", [1]);
+    return r.jobs.length === 1 && r.jobs[0].type === "timed_recall";
+})());
+
+console.log("old Vocab builder lists -> batches");
+(async () => {
+    const Plugin = require(path.join(__dirname, "..", "main.js"));
+    const p = Object.create(Plugin.prototype);
+    p.settings = { deckPrefix: "LinguaStudio" };
+    p.data = { vocab: { de: { terms: ["Haus", "Baum", "Haus"], selected: ["Meaning"] }, zh: { terms: ["苹果"], selected: ["Meaning", "Writing"] }, fr: { terms: [] } }, v4: { batches: [], cur: null, stacks: [] } };
+    let saved = 0;
+    p.persist = async () => { saved++; };
+    await p.migrateVocabListsToBatches();
+    const bs = p.data.v4.batches;
+    ok("a list with words becomes one batch per language", bs.length === 2);
+    const de = bs.find((b) => b.lang === "de");
+    ok("words carried over, de-duplicated", de.words.map((w) => w.S).join(",") === "Haus,Baum");
+    ok("a German list becomes Word cards", de.outs[0].type === "word");
+    const zh = bs.find((b) => b.lang === "zh");
+    ok("Mandarin keeps the chosen templates", JSON.stringify(zh.outs[0].tpls) === "[0,3]");
+    ok("every list is flagged so it migrates once", Object.values(p.data.vocab).every((v) => v.migratedToV4));
+    await p.migrateVocabListsToBatches();
+    ok("a second load adds nothing", p.data.v4.batches.length === 2 && saved === 1);
+})();
